@@ -3,6 +3,8 @@ public class Car {
 	
 	public void start() {
 		System.out.println("Поехали");
+		
+		System.out.println("Стоп машина ещё раз");
 	}
 	
 	public void stop() {
