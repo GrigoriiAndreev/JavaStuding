@@ -30,8 +30,8 @@ public class Solution {
         System.out.println("The cat's name is " + grandFather.name + ", no mother, no father");
         System.out.println("The cat's name is " + grandMother.name + ", no mother, no father");
         System.out.println("The cat's name is " + father.name + ", no mother, father is " + grandFather.name);
-        System.out.println("The cat's name is " + mother.name + ", mother is" + grandMother.name + ", no father");
-        System.out.println("The cat's name is " + son.name + ", mother is" + mother.name + ", father is" + father.name);
+        System.out.println("The cat's name is " + mother.name + ", mother is " + grandMother.name + ", no father");
+        System.out.println("The cat's name is " + son.name + ", mother is " + mother.name + ", father is " + father.name);
         System.out.println("The cat's name is " + doughter.name + ", mother is " + mother.name + ", father is " + father.name);
         
         //System.out.println(catMother);
