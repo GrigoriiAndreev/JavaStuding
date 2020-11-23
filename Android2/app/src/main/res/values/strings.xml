@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Ice cream advicer</string>
+    <string name="find_ice_cream">Find ice cream</string>
+    <string name="brands">No ice-creame selected</string>
+    <string-array name="icecream_colors">
+        <item>light</item>
+        <item>amber</item>
+        <item>brown</item>
+        <item>dark</item>
+    </string-array>
+</resources>
