@@ -1,5 +1,6 @@
 package MathPackage;
 
+import java.io.File;
 import java.util.*;
 
 public class Page {
@@ -20,6 +21,7 @@ public class Page {
 
     public static void main(String[] args) {
 
+/*
         Page[] grade2Add = new Page[10];
 
         grade2Add[0] = new Page (
@@ -31,12 +33,9 @@ public class Page {
         grade2Add[2] = new Page (
                 "Сложение чисел", "Выбери картинки, чтобы они сошлись с примером",
                 1,9);
-
-/*
-        Worksheet add = new Worksheet(
-                "Сложение чисел",
-                "Сложение чисел однозначных чисел. Сумма до 10.",
-                1, 9);
 */
+
+        File folder = new File("D:\\mathematics-at-school.com\\JavaTemplatesRead");
+
     }
 }
