@@ -627,7 +627,9 @@ public class AllTopics {
                 allTopicsLongDivide.get(9).h2Eng, allTopicsLongDivide.get(9).shortProblemDescriptionEng, allTopicsLongDivide.get(9).longProblemDescriptionEng);
 
 */
+
 //Деление трехзначных чисел
+/*
 
         List<AllTopics> allTopicsLongDivide = new ArrayList<>();
 
@@ -1191,8 +1193,7 @@ public class AllTopics {
         Matrix.finalHtmlPageSingleTopic(General.workingFolder, General.readyFilesFolder, allTopicsLongDivide.get(9).gradeEng, allTopicsLongDivide.get(9).totalPageOfWorksheets, allTopicsLongDivide.get(9).topicEng,
                 allTopicsLongDivide.get(9).h2Eng, allTopicsLongDivide.get(9).shortProblemDescriptionEng, allTopicsLongDivide.get(9).longProblemDescriptionEng);
 
-
-
+*/
 
 //Деление в строчку - готово!
 /*
@@ -1765,7 +1766,6 @@ public class AllTopics {
                 allTopicsDivide.get(9).h2Eng, allTopicsDivide.get(9).shortProblemDescriptionEng, allTopicsDivide.get(9).longProblemDescriptionEng);
 
 */
-
 
 //Умножение в строчку. Сделано!
 /*
@@ -3043,7 +3043,7 @@ public class AllTopics {
 
 */
 
-        //Умножение в столбик. Часть 1. Сделано!
+//Умножение в столбик. Часть 1. Сделано!
 /*
 
 
@@ -4312,7 +4312,7 @@ public class AllTopics {
 
 */
 
-                //Умножение в столбик. Часть 2. Сделано!
+//Умножение в столбик. Часть 2. Сделано!
 /*
         Matrix.emptyFolder(General.workingFolder);
         Matrix.emptyFolder(General.readyFilesFolder);
@@ -4943,6 +4943,7 @@ public class AllTopics {
                 allTopicsMultiplyColumn2.get(10).h2Eng, allTopicsMultiplyColumn2.get(10).shortProblemDescriptionEng, allTopicsMultiplyColumn2.get(10).longProblemDescriptionEng);
 
 */
+
 /*
 
         List<AllTopics2> allTopicsMultiplyColumn3 = new ArrayList<>();

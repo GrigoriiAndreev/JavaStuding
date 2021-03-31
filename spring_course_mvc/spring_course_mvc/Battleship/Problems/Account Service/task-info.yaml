@@ -22,5 +22,8 @@ files:
     \ return lastName; \n    }\n}"
   learner_created: false
 feedback_link: https://hyperskill.org/learn/step/2121#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Tue, 09 Mar 2021 11:35:02 UTC
 record: -1

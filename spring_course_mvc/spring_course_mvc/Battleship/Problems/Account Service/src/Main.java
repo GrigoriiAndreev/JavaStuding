@@ -4,7 +4,6 @@ interface AccountService {
      * @param id owner unique identifier
      * @return account or null
      */
-    int age = 10;
     Account findAccountByOwnerId(long id);
     /**
      * It count the number of account with balance > the given value
@@ -64,4 +63,38 @@ class User {
     public String getLastName() { 
         return lastName; 
     }
+}
+
+class AccountServiceImpl implements AccountService {
+
+    Account[] accounts;
+
+    public AccountServiceImpl(Account[] accounts) {
+        this.accounts = accounts.clone();
+
+    }
+
+    @Override
+    public Account findAccountByOwnerId(long id) {
+
+        for (Account a: accounts) {
+            if (a.getOwner().getId() == id) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public long countAccountsWithBalanceGreaterThan(long value) {
+        long counter = 0;
+
+        for (Account a: accounts) {
+            if (a.getBalance() > value) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
 }

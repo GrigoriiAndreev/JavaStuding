@@ -1,5 +1,13 @@
 package ru.detskiostrov.addresses;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import ru.detskiostrov.virtuemart.VirtuemartOrderList;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,95 +19,123 @@ import java.util.List;
  */
 public class ClientsAddressBook {
 
-    private static final String userName = "u1029682_integral";
-    private static final String password = "123qweQWE";
-    private static final String url = "jdbc:mysql://144.76.132.238:3306/db1029682_integral";
-    private static final String query = "select * from dqope_users";
+    //Be careful to publish private and secure info in OpenSource places!!!
+    //Data to extract users list from Joomla sites
+    private static final String siteDBAdminLogin = "u1029682_integral";
+    private static final String siteDBAdminPassword = "123qweQWE";
+    private static final String siteDBIP = "5.253.60.105";
+    private static final String siteDBName = "db1029682_integral";
+    private static final String extractedDataFolder = "D:/JavaStudy/UsefullUtils/src/main/resources/resultfolder/";
+    private static final String extractedDataExcelFileName = "AllUsersList.xls";
+    private static final String siteDBUrl = "jdbc:mysql://" + siteDBIP + ":3306/" + siteDBName;
+    private static final String dbSQLQueryToGetUsersList = "select * from dqope_users";
+    //Data to extract orders from Virtuemart shops
 
-    List<ClientsAddressBook> users = new ArrayList<>();
+    private static final String shopDBAdminLogin = "db1029682_shop";
+    private static final String shopDBAdminPassword = "123qweQWE";
+    private static final String shopDBUrl = "jdbc:mysql://144.76.132.238:3306/db1029682_shop";
+    private static final String dbSQLQueryToGetOrdersList = "select * from cctl0_virtuemart_orders cvo";
 
-    int id;
-    String email;
-    String telephone;
+    static List<ClientsAddressBook> allShopUsersList = new ArrayList<>();
+    ClientsAddressBook clientsAddressBook;
+
+    static List<VirtuemartOrderList> virtuemartOrderList = new ArrayList<>();
+    VirtuemartOrderList virtuemartSingleOrder;
+
+    int clientID;
+    String clientEmail;
+    String clientName;
+    String clientUserName;
+    String clientTelephone;
     String purchasesNumber;
+    String accountCreatedData;
     Date lastPurchase;
 
-    public ClientsAddressBook(int id, String email, String telephone, String purchasesNumber, Date lastPurchase) {
-        this.id = id;
-        this.email = email;
-        this.telephone = telephone;
-        this.purchasesNumber = purchasesNumber;
-        this.lastPurchase = lastPurchase;
-    }
+    //Getters and setters
 
-    public int getId() {
-        return id;
-    }
+    public static void connectToDBUsersList(String shopDBUrl, String shopDBAdminLogin, String shopDBAdminPassword) throws SQLException {
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public String getPurchasesNumber() {
-        return purchasesNumber;
-    }
-
-    public void setPurchasesNumber(String purchasesNumber) {
-        this.purchasesNumber = purchasesNumber;
-    }
-
-    public Date getLastPurchase() {
-        return lastPurchase;
-    }
-
-    public void setLastPurchase(Date lastPurchase) {
-        this.lastPurchase = lastPurchase;
-    }
-
-    public void connectToDB(String url, String userName, String password) {
-
+        //Establish the connection via JDBC
         DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-        try (Connection connection = DriverManager.getConnection(url, userName, password);
-             Statement statement = connection.createStatement();) {
-            System.out.println("We are connected");
-            ResultSet resultSet = statement.executeQuery(query);
+        try (Connection connection = DriverManager.getConnection(siteDBUrl, siteDBAdminLogin, siteDBAdminPassword);
+             Statement statement = connection.createStatement()) {
+            System.out.println("The connection to DB is established!");
+            ResultSet resultSet = statement.executeQuery(dbSQLQueryToGetUsersList);
 
             while (resultSet.next()) {
-                MagazinIntegralUsers user1 = new MagazinIntegralUsers();
-                user1.setId(resultSet.getInt(1));
-                user1.setName(resultSet.getString(2));
-                user1.setUsername(resultSet.getString(3));
-                user1.setEmail(resultSet.getString(4));
-                users.add(user1);
-                System.out.println(resultSet.getInt(1) + " " + resultSet.getString(2) + " "
-                        + resultSet.getString(3) + " " +resultSet.getString(4));
+                ClientsAddressBook singleUser = new ClientsAddressBook();
 
+                singleUser.clientID = resultSet.getInt(1);
+                singleUser.clientName = resultSet.getString(2);
+                singleUser.clientUserName = resultSet.getString(3);
+                singleUser.clientEmail = resultSet.getString(4);
+                singleUser.accountCreatedData = resultSet.getString(8);
+
+                allShopUsersList.add(singleUser);
+//                System.out.println(resultSet.getInt(1) + " " + resultSet.getString(2) + " "
+//                        + resultSet.getString(3) + " " +resultSet.getString(4) + " " +
+//                        resultSet.getDate(8));
+//
 //                users.add(user1);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        System.out.println("Show all users");
+        System.out.println("All users successfully extracted from db " + siteDBName);
+    }
+
+    public static void safeUsersListToExcelFile() {
+
+        // создание самого excel файла в памяти
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("Users list");
+
+        // Counter for lines
+        int rowNum = 0;
+
+        // Create 0-th row (the columns names)
+        Row row = sheet.createRow(rowNum);
+
+        row.createCell(0).setCellValue("Id");
+        row.createCell(1).setCellValue("Name");
+        row.createCell(2).setCellValue("Username");
+        row.createCell(3).setCellValue("Email");
+        row.createCell(4).setCellValue("RegisteredDate");
+
+        //Fill all lines for exel result table
+        rowNum = 1;
+        for (ClientsAddressBook clients : allShopUsersList) {
+            Row row1 = sheet.createRow(rowNum);
+
+            row1.createCell(0).setCellValue(clients.clientID);
+            row1.createCell(1).setCellValue(clients.clientName);
+            row1.createCell(2).setCellValue(clients.clientUserName);
+            row1.createCell(3).setCellValue(clients.clientEmail);
+            row1.createCell(4).setCellValue(clients.accountCreatedData);
+
+            rowNum++;
+        }
+
+        // Safe extracted data to xls file
+        try (FileOutputStream out = new FileOutputStream(new File(extractedDataFolder + extractedDataExcelFileName))) {
+            workbook.write(out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Excel file is created!");
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+        System.out.println("Connecting to DB");
+
+        //Extract users from Joomla/Virtuemart shop
+        connectToDBUsersList(shopDBUrl, shopDBAdminLogin, shopDBAdminPassword);
+        safeUsersListToExcelFile();
+
+        //Extract orders from Virtuemart shop
+//        connectToDBOrdersList(shopDBUrl, shopDBAdminLogin, shopDBAdminPassword);
+
 
     }
 }

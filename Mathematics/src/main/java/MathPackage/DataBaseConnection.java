@@ -11,14 +11,13 @@ import java.util.List;
 public class DataBaseConnection {
 
     public static void main(String[] args) throws SQLException {
-
+        // Data to access
         String userName = "u1029682_integral";
         String password = "123qweQWE";
         String url = "jdbc:mysql://144.76.132.238:3306/db1029682_integral";
         String query = "select * from dqope_users";
+
         List<MagazinIntegralUsers> users = new ArrayList<>();
-
-
 
         DriverManager.registerDriver(new com.mysql.jdbc.Driver());
         try (Connection connection = DriverManager.getConnection(url, userName, password);
