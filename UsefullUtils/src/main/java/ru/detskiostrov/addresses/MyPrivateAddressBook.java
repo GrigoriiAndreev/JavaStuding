@@ -10,6 +10,9 @@ import java.util.ArrayList;
  */
 public class MyPrivateAddressBook {
 
+    static final String sourceFileUrl = "";     //Read .cvs file with . Exported from Yandex mail address book
+    static final String sourceDirectory = "";
+
     private int id;
     private String firstName;
     private String secondName;
@@ -89,6 +92,14 @@ public class MyPrivateAddressBook {
     }
 
     public static void main(String[] args) {
+
+    }
+
+    public void readDataFromFile(){
+
+    }
+
+    public void readDataFromDB(){
 
     }
 
