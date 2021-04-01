@@ -1,3 +1,2 @@
 Test for reset
 New line
-Second new line
