@@ -1,7 +1,7 @@
 package ru.detskiostrov.virtuemart;
 
 /**
- * This class extracting VirtueMart product list
+ * This class presents VirtueMart product list
  * Author: Grigorii Andreev
  * Date: 22 March 2021
  */

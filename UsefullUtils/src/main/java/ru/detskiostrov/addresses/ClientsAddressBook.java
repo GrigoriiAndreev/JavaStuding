@@ -53,6 +53,25 @@ public class ClientsAddressBook {
 
     //Getters and setters
 
+
+    public ClientsAddressBook() {
+    }
+
+    public ClientsAddressBook(int clientID, String clientEmail, String clientName) {
+        this.clientID = clientID;
+        this.clientEmail = clientEmail;
+        this.clientName = clientName;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientsAddressBook{" +
+                "clientID=" + clientID +
+                ", clientEmail='" + clientEmail + '\'' +
+                ", clientName='" + clientName + '\'' +
+                '}';
+    }
+
     public static void connectToDBUsersList(String shopDBUrl, String shopDBAdminLogin, String shopDBAdminPassword) throws SQLException {
 
         //Establish the connection via JDBC
@@ -128,6 +147,16 @@ public class ClientsAddressBook {
 
     public static void main(String[] args) throws SQLException {
         System.out.println("Connecting to DB");
+
+        List<ClientsAddressBook> list = new ArrayList<>();
+        ClientsAddressBook client1 = new ClientsAddressBook (1, "emai1@mail.ru", "Client1");
+        ClientsAddressBook client2 = new ClientsAddressBook (2, "emai2@mail.ru", "Client2");
+        ClientsAddressBook client3 = new ClientsAddressBook (3, "emai3@mail.ru", "Client3");
+        list.add(client1);
+        list.add(client2);
+        list.add(client3);
+
+        System.out.println(list);
 
         //Extract users from Joomla/Virtuemart shop
         connectToDBUsersList(shopDBUrl, shopDBAdminLogin, shopDBAdminPassword);

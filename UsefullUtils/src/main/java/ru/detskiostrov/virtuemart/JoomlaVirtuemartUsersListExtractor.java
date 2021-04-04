@@ -109,7 +109,7 @@ public class JoomlaVirtuemartUsersListExtractor {
         row.createCell(13).setCellValue("lastResteTime");
         row.createCell(14).setCellValue("restCount");
 
-        //Fill all rows for exel result table
+        //Fill all rows for excel result table
         excelRowsCounter = 1;
 
 //        System.out.println(joomlaVirtuemartUsersList.get(3).);
