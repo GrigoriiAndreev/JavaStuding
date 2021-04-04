@@ -3,6 +3,7 @@ package ru.detskiostrov.techservices;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import ru.detskiostrov.virtuemart.JoonlaAccesCredentionals;
 
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -20,14 +21,13 @@ import java.util.List;
 public class DBTableStructureExtractor {
 
     // Be careful to store secure and private data
-    private static final String shopDBAdminLogin = "";
-    private static final String shopDBAdminPassword = "";
-    private static final String shopDBIP = "";
     private static final String shopDBName = "db1029682_integ2";
-    private static final String dbTableName = "orszw_virtuemart_products_ru_ru";
+    private static final String dbTableName = "`dqope_virtuemart_order_items`";
     private static final String extractedDataFolder = "D:/JavaStudy/UsefullUtils/src/main/resources/resultfolder/";
-    private static final String extractedDataExcelFileName = "db_" + shopDBName + "_table_" + dbTableName + "_structure.xls";
-    private static final String shopDBUrl = "jdbc:mysql://" + shopDBIP + ":3306/" + shopDBName;
+    private static final String extractedDataExcelFileName = "db_" + JoonlaAccesCredentionals.shopDBName +
+            "_table_" + JoonlaAccesCredentionals.dbTableName + "_structure.xls";
+    private static final String shopDBUrl = "jdbc:mysql://" + JoonlaAccesCredentionals.shopDBIP + ":3306/" +
+            JoonlaAccesCredentionals.shopDBName;
 
     static List<DBTableStructureExtractor> dbTableStructure = new ArrayList();
     static DBTableStructureExtractor item;
@@ -122,7 +122,8 @@ public class DBTableStructureExtractor {
 
         Connection connection;
         try {
-            connection = DriverManager.getConnection(shopDBUrl, shopDBAdminLogin, shopDBAdminPassword);
+            connection = DriverManager.getConnection(shopDBUrl, JoonlaAccesCredentionals.shopDBAdminLogin,
+                    JoonlaAccesCredentionals.shopDBAdminPassword);
             System.out.println("Connection to db is established!");
 
             DatabaseMetaData information = connection.getMetaData();

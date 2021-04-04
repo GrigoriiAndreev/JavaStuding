@@ -1,7 +1,7 @@
 package ru.detskiostrov.virtuemart;
 
 /**
- * This class presents VirtueMart product list
+ * This class presents VirtueMart product list. Table name `virtuemart_products_ru_ru`
  * Author: Grigorii Andreev
  * Date: 22 March 2021
  */

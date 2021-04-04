@@ -1,7 +1,7 @@
 /*
- *  Class extracting the Joomla users from MySQL db and safe them into Excel file
+ *  Class extracts the Joomla users from MySQL db and safe them into Excel file
  *  Author: Grigorii Andreev
- *  Date:
+ *  Date: 26 March 2021
  */
 
 package ru.detskiostrov.virtuemart;
@@ -9,9 +9,6 @@ package ru.detskiostrov.virtuemart;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
-import ru.detskiostrov.addresses.ClientsAddressBook;
-import ru.detskiostrov.techservices.DBTableStructureExtractor;
-import ru.detskiostrov.techservices.DBTablesNameListExtractor;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,37 +19,30 @@ import java.util.List;
 public class JoomlaVirtuemartUsersListExtractor {
 
     // Be careful to store secure and private data
-    private static final String shopDBAdminLogin = "";
-    private static final String shopDBAdminPassword = "";
-    private static final String shopDBIP = "";
-    private static final String shopDBName = "";
-    private static final String dbTableName = "orszw_users";
     private static final String extractedDataFolder = "D:/JavaStudy/UsefullUtils/src/main/resources/resultfolder/";
-    private static final String extractedDataExcelFileName = "db_" + shopDBName + "users_list.xls";
-    private static final String dbSQLQueryToGetUsersList = "select * from orszw_users";
-    private static final String shopDBUrl = "jdbc:mysql://" + shopDBIP + ":3306/" + shopDBName;
-
+    private static final String extractedDataExcelFileName = "db_" + JoonlaAccesCredentionals.shopDBName + "users_list.xls";
+    private static final String dbSQLQueryToGetUsersList = "select * from dqope_users";
+    private static final String shopDBUrl = "jdbc:mysql://" + JoonlaAccesCredentionals.shopDBIP +
+            ":3306/" + JoonlaAccesCredentionals.shopDBName;
 
     static List<JoomlaVirtuemartUsers> joomlaVirtuemartUsersList = new ArrayList<JoomlaVirtuemartUsers>();
 
-
     public static void main(String[] args) throws SQLException {
 
-
-
-        extractJoomlaUsers(shopDBName);
+        extractJoomlaUsers();
         safeUsersListToExcelFile();
 
     }
 
     //Method connects to db via jdbc and extract to List all users
-    public static void extractJoomlaUsers(String dbTableName) throws SQLException {
+    public static void extractJoomlaUsers() throws SQLException {
 
         List<JoomlaVirtuemartUsers> allUsersList = new ArrayList();
 
         //Establish the connection via JDBC
         DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-        try (Connection connection = DriverManager.getConnection(shopDBUrl, shopDBAdminLogin, shopDBAdminPassword);
+        try (Connection connection = DriverManager.getConnection(shopDBUrl,
+                JoonlaAccesCredentionals.shopDBAdminLogin, JoonlaAccesCredentionals.shopDBAdminPassword);
              Statement statement = connection.createStatement()) {
                 System.out.println("The connection to DB is established!");
                 ResultSet resultSet = statement.executeQuery(dbSQLQueryToGetUsersList);
@@ -65,14 +55,9 @@ public class JoomlaVirtuemartUsersListExtractor {
                     singleUser.username = resultSet.getString(3);
                     singleUser.email = resultSet.getString(4);
                     singleUser.usertype = resultSet.getString(5);
-//                    singleUser.block = resultSet.getInt(6);
-//                    singleUser.sendEmail = resultSet.getByte(7);
-//                    singleUser.registerDate = resultSet.getByte(8);
-//                    singleUser.lastvisitDate = resultSet.getByte(9);
                     singleUser.activation = resultSet.getString(10);
                     singleUser.params = resultSet.getString(11);
                     singleUser.lastResetTime = resultSet.getString(12);
-//                    singleUser.resetCount = resultSet.getInt(13);
 
                     allUsersList.add(singleUser);
             }

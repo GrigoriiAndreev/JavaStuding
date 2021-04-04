@@ -3,7 +3,6 @@ package ru.detskiostrov.virtuemart;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
-import ru.detskiostrov.addresses.ClientsAddressBook;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,52 +12,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class contain the orders for Virtuemart
+ * Class contain the orders for Virtuemart. Methods extract data from My SQL DB ans safe them to Excel file
  * Author: Grigorii Andreev
  * Data: 12 March 2021
  */
 
 public class VirtuemartOrderList {
 
-    //Data to extract users list from Virtuemart shops
+    //Data to connect to Virtuemart shops
     private static final String shopDBAdminLogin = JoonlaAccesCredentionals.shopDBAdminLogin;
     private static final String shopDBAdminPassword = JoonlaAccesCredentionals.shopDBAdminPassword;
     private static final String shopDBIP = JoonlaAccesCredentionals.shopDBIP;
-    private static final String shopDBName = JoonlaAccesCredentionals.shopDBName;
-    private static final String dbTableName = JoonlaAccesCredentionals.dbTableName;
     private static final String extractedDataFolder = JoonlaAccesCredentionals.extractedDataFolder;
-    private static final String extractedDataExcelFileName = "db_" + shopDBName + "_orders_list.xls";
-    static final String shopDBUrl = "jdbc:mysql://" + shopDBIP + ":3306/" + shopDBName;;
+    private static final String extractedDataExcelFileName = "db_" + JoonlaAccesCredentionals.shopDBName
+            + "_orders_list.xls";
+    static final String shopDBUrl = "jdbc:mysql://" + shopDBIP + ":3306/" + JoonlaAccesCredentionals.shopDBName;
 
-    private static final String dbSQLQueryToGetOrdersList = "SELECT " +
-            "orszw_virtuemart_order_items.virtuemart_order_id, " +
-            "orszw_virtuemart_order_items.virtuemart_product_id, " +
-            "orszw_virtuemart_order_items.order_item_name," +
-            "orszw_virtuemart_order_items.product_quantity, " +
-            "orszw_virtuemart_order_items.product_item_price," +
-            "orszw_virtuemart_order_items.order_status," +
-//            "orszw_virtuemart_order_items.created_on, " +
-//            "orszw_virtuemart_order_items.order_item_sku " +
-//            "orszw_virtuemart_orders.order_number" +
-            " FROM orszw_virtuemart_order_items" +
-//            " WHERE orszw_virtuemart_order_items.virtuemart_order_id = orszw_virtuemart_orders.virtuemart_order_id AND" +
-            "WHERE" +
-            " DATE(`orszw_virtuemart_order_items`.`created_on`) BETWEEN '2021-01-01 00:00:00' AND '2021-03-31 23:00:00'" +
-            " #AND  orszw_virtuemart_product_manufacturers.virtuemart_product_id = orszw_virtuemart_order_items.virtuemart_product_id;";
+    private static final String dbSQLQueryToGetOrdersList =
+            "SELECT dqope_virtuemart_order_items.virtuemart_order_id, dqope_virtuemart_orders.order_number, dqope_virtuemart_order_items.order_item_name, dqope_virtuemart_order_items.virtuemart_product_id, dqope_virtuemart_order_items.order_item_sku, dqope_virtuemart_order_items.product_item_price, dqope_virtuemart_order_items.created_on, dqope_virtuemart_order_items.order_status, dqope_virtuemart_product_manufacturers.virtuemart_manufacturer_id\n" +
+                    "FROM dqope_virtuemart_order_items, dqope_virtuemart_orders, dqope_virtuemart_product_manufacturers\n" +
+                    "WHERE dqope_virtuemart_orders.virtuemart_order_id = dqope_virtuemart_order_items.virtuemart_order_id\n" +
+                    "AND dqope_virtuemart_orders.created_on BETWEEN '2021-01-01' AND '2021-04-01' AND dqope_virtuemart_orders.order_status = 'C' AND dqope_virtuemart_product_manufacturers.virtuemart_product_id = dqope_virtuemart_order_items.virtuemart_product_id\n ";
 
-    //Fields names suites the Joomla/Virtuemart db names
-    int virtuemartOrderId;
-    int virtuemartProductId;
-    String orderItemName;
-    int productQuantity;
-    float productItemPrice;
-    String orderStatus;
-    Date createdOn;
-    String orderItemSku;
-    String orderNumber;     //Internal order number, may be customized
-
-    static List<VirtuemartOrderList> virtuemartOrderList = new ArrayList();
-    static VirtuemartOrderList virtuemartSingleOrder = new VirtuemartOrderList();
+    static List<VirtuemartOrderItems> virtuemartOrderList = new ArrayList();
+    static VirtuemartOrderItems virtuemartSingleOrder;
 
     public static void connectToDBOrdersList(String shopDBUrl, String shopDBAdminLogin, String shopDBAdminPassword) throws SQLException {
 
@@ -70,64 +47,62 @@ public class VirtuemartOrderList {
             ResultSet resultSet = statement.executeQuery(dbSQLQueryToGetOrdersList);
 
             while (resultSet.next()) {
-                virtuemartSingleOrder.virtuemartOrderId = resultSet.getInt(1);
-                virtuemartSingleOrder.virtuemartProductId = resultSet.getInt(2);
-                virtuemartSingleOrder.orderItemName = resultSet.getString(3);
-                virtuemartSingleOrder.productQuantity = resultSet.getInt(4);
-                virtuemartSingleOrder.productItemPrice = resultSet.getFloat(5);
-                virtuemartSingleOrder.orderStatus = resultSet.getString(6);
-                virtuemartSingleOrder.createdOn = resultSet.getDate(7);
-                virtuemartSingleOrder.orderItemSku = resultSet.getString(8);
-                virtuemartSingleOrder.orderNumber = resultSet.getString(9);
+                virtuemartSingleOrder = new VirtuemartOrderItems();
+
+                virtuemartSingleOrder.setVirtuemartOrderId(resultSet.getInt(1));
+                virtuemartSingleOrder.setOrderNumber(resultSet.getString(2));
+                virtuemartSingleOrder.setOrderItemName(resultSet.getString(3));
+                virtuemartSingleOrder.setVirtuemartProductId(resultSet.getInt(4));
+                virtuemartSingleOrder.setOrderItemSku(resultSet.getString(5));
+                virtuemartSingleOrder.setProductItemPrice(resultSet.getInt(6));
+                virtuemartSingleOrder.setCreatedOn(resultSet.getString(7));
+                virtuemartSingleOrder.setOrderStatus(resultSet.getString(8));
+                virtuemartSingleOrder.setVirtuemartManufacturerId(resultSet.getInt(9));
+
                 virtuemartOrderList.add(virtuemartSingleOrder);
-
-//                System.out.println(resultSet.getString(5) + " " + resultSet.getString(24) + " "
-//                        + resultSet.getString(34) + " " +resultSet.getString(42));
-
-//                users.add(user1);
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
-//        System.out.println("Show all users");
-
     }
+
+    // Safe etracted data ro Excel file
     public static void safeVirtuemartOrderListToExcelFile() {
 
-        // Create Excel variable
+        // Create Excel workbook variable
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("Orders list");
 
-        // Counter for lines
+        // Counter for rows
         int rowNum = 0;
 
         // Create 0-th row (the columns names)
         Row row = sheet.createRow(rowNum);
 
         row.createCell(0).setCellValue("virtuemartOrderId");
-        row.createCell(1).setCellValue("virtuemartProductId");
+        row.createCell(1).setCellValue("orderNumber");
         row.createCell(2).setCellValue("orderItemName");
-        row.createCell(3).setCellValue("productQuantity");
-        row.createCell(4).setCellValue("productItemPrice");
-        row.createCell(5).setCellValue("orderStatus");
+        row.createCell(3).setCellValue("virtuemartProductId");
+        row.createCell(4).setCellValue("orderItemSku");
+        row.createCell(5).setCellValue("productItemPrice");
         row.createCell(6).setCellValue("createdOn");
-        row.createCell(7).setCellValue("orderItemSku");
-        row.createCell(8).setCellValue("orderNumber");
+        row.createCell(7).setCellValue("orderStatus");
+        row.createCell(8).setCellValue("virtuemartManufacturerId");
 
         //Fill all lines for exel result table
         rowNum = 1;
-        for (VirtuemartOrderList clients : virtuemartOrderList) {
+        for (VirtuemartOrderItems clients : virtuemartOrderList) {
             Row row1 = sheet.createRow(rowNum);
 
-            row1.createCell(0).setCellValue(clients.virtuemartOrderId);
-            row1.createCell(1).setCellValue(clients.virtuemartProductId);
-            row1.createCell(2).setCellValue(clients.orderItemName);
-            row1.createCell(3).setCellValue(clients.productQuantity);
-            row1.createCell(4).setCellValue(clients.productItemPrice);
-            row1.createCell(5).setCellValue(clients.orderStatus);
-            row1.createCell(6).setCellValue(clients.createdOn);
-            row1.createCell(7).setCellValue(clients.orderItemSku);
-            row1.createCell(8).setCellValue(clients.orderNumber);
+            row1.createCell(0).setCellValue(clients.getVirtuemartOrderId());
+            row1.createCell(1).setCellValue(clients.getOrderNumber());
+            row1.createCell(2).setCellValue(clients.getOrderItemName());
+            row1.createCell(3).setCellValue(clients.getVirtuemartProductId());
+            row1.createCell(4).setCellValue(clients.getOrderItemSku());
+            row1.createCell(5).setCellValue(clients.getProductItemPrice());
+            row1.createCell(6).setCellValue(clients.getCreatedOn());
+            row1.createCell(7).setCellValue(clients.getOrderStatus());
+            row1.createCell(8).setCellValue(clients.getVirtuemartManufacturerId());
 
             rowNum++;
         }
