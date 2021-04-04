@@ -3,6 +3,7 @@ package ru.detskiostrov.addresses;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import ru.detskiostrov.virtuemart.JoonlaAccesCredentionals;
 import ru.detskiostrov.virtuemart.VirtuemartOrderList;
 
 import java.io.File;
@@ -21,20 +22,15 @@ public class ClientsAddressBook {
 
     //Be careful to publish private and secure info in OpenSource places!!!
     //Data to extract users list from Joomla sites
-    private static final String siteDBAdminLogin = "u1029682_integral";
-    private static final String siteDBAdminPassword = "123qweQWE";
-    private static final String siteDBIP = "5.253.60.105";
-    private static final String siteDBName = "db1029682_integral";
     private static final String extractedDataFolder = "D:/JavaStudy/UsefullUtils/src/main/resources/resultfolder/";
     private static final String extractedDataExcelFileName = "AllUsersList.xls";
-    private static final String siteDBUrl = "jdbc:mysql://" + siteDBIP + ":3306/" + siteDBName;
+    private static final String siteDBUrl = "jdbc:mysql://" + JoonlaAccesCredentionals.shopDBIP +
+            ":3306/" + JoonlaAccesCredentionals.shopDBName;
     private static final String dbSQLQueryToGetUsersList = "select * from dqope_users";
+
     //Data to extract orders from Virtuemart shops
 
-    private static final String shopDBAdminLogin = "db1029682_shop";
-    private static final String shopDBAdminPassword = "123qweQWE";
-    private static final String shopDBUrl = "jdbc:mysql://144.76.132.238:3306/db1029682_shop";
-    private static final String dbSQLQueryToGetOrdersList = "select * from cctl0_virtuemart_orders cvo";
+//    private static final String dbSQLQueryToGetOrdersList = "select * from cctl0_virtuemart_orders cvo";
 
     static List<ClientsAddressBook> allShopUsersList = new ArrayList<>();
     ClientsAddressBook clientsAddressBook;
