@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">Messanger3</string>
-    <string name="hint">Enter the text</string>
-    <string name="send">Send the message</string>
-</resources>
